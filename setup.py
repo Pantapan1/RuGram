@@ -1,14 +1,21 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
 setup(
     name='rugram',
-    version='0.1.0',
-    description='Пиши Telegram-ботов на чистом русском языке',
-    long_description='RuGram — транспайлер и библиотека для создания ботов с синтаксисом и Чебурашкой под капотом',
+    version='0.1.2',
+    description='Пиши Telegram-ботов на чистом русском Python',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    author='Pantapan1',
+    url='https://github.com/Pantapan1/RuGram',
     packages=find_packages(),
+    py_modules=['ядро', 'транспайлер'],
     entry_points={
         'console_scripts': [
-            'rugram=rugram.транспайлер:главная',
+            'rugram=транспайлер:главная',
         ],
     },
     install_requires=[
@@ -17,6 +24,7 @@ setup(
     python_requires='>=3.8',
     classifiers=[
         'Programming Language :: Python :: 3',
-        'Programming Language :: Russian',  # Шутка, но почему нет?
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
     ],
 )

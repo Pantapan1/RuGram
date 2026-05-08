@@ -111,62 +111,62 @@ class ИнлайнКнопка(Кнопка):
 
 class Пользователь:
     def __init__(self, данные):
-        сам.ид = данные.get('id')
-        сам.бот = данные.get('is_bot', False)
-        сам.имя = данные.get('first_name', '')
-        сам.фамилия = данные.get('last_name', '')
-        сам.юзернейм = данные.get('username', '')
-        сам.язык = данные.get('language_code', '')
-        сам.премиум = данные.get('is_premium', False)
-        сам.ссылка = f"tg://user?id={сам.ид}" if сам.ид else ''
+        self.ид = данные.get('id')
+        self.бот = данные.get('is_bot', False)
+        self.имя = данные.get('first_name', '')
+        self.фамилия = данные.get('last_name', '')
+        self.юзернейм = данные.get('username', '')
+        self.язык = данные.get('language_code', '')
+        self.премиум = данные.get('is_premium', False)
+        self.ссылка = f"tg://user?id={self.ид}" if self.ид else ''
     
     def упоминание(self):
-        if сам.юзернейм:
-            return f"@{сам.юзернейм}"
-        elif сам.имя:
-            return сам.имя
-        return f"Пользователь {сам.ид}"
+        if self.юзернейм:
+            return f"@{self.юзернейм}"
+        elif self.имя:
+            return self.имя
+        return f"Пользователь {self.ид}"
     
     def __str__(self):
-        return сам.упоминание()
+        return self.упоминание()
 
 
 class Чат:
     def __init__(self, данные):
-        сам.ид = данные.get('id')
-        сам.тип = данные.get('type', 'private')
-        сам.название = данные.get('title', '')
-        сам.юзернейм = данные.get('username', '')
-        сам.имя = данные.get('first_name', '')
-        сам.фамилия = данные.get('last_name', '')
+        self.ид = данные.get('id')
+        self.тип = данные.get('type', 'private')
+        self.название = данные.get('title', '')
+        self.юзернейм = данные.get('username', '')
+        self.имя = данные.get('first_name', '')
+        self.фамилия = данные.get('last_name', '')
     
     def __str__(self):
-        if сам.название:
-            return сам.название
-        return f"Чат {сам.ид}"
+        if self.название:
+            return self.название
+        return f"Чат {self.ид}"
 
 
 class Сообщение:
     def __init__(self, данные, бот=None):
-        сам.бот = бот
-        сам.ид = данные.get('message_id')
-        сам.от = Пользователь(данные.get('from', {}))
-        сам.чат = Чат(данные.get('chat', {}))
-        сам.дата = данные.get('date')
-        сам.текст = данные.get('text', '')
-        сам.подпись = данные.get('caption', '')
-        сам.тип = сам._определить_тип(данные)
-        сам.фото = данные.get('photo', [])
-        сам.видео = данные.get('video', {})
-        сам.аудио = данные.get('audio', {})
-        сам.документ = данные.get('document', {})
-        сам.стикер = данные.get('sticker', {})
-        сам.голос = данные.get('voice', {})
-        сам.видеозаметка = данные.get('video_note', {})
-        сам.локация = данные.get('location', {})
-        сам.контакт = данные.get('contact', {})
-        сам.опрос = данные.get('poll', {})
-        сам.данные = данные
+        self.бот = бот
+        self.ид = данные.get('message_id')
+        self.от = Пользователь(данные.get('from', {}))
+        self.чат = Чат(данные.get('chat', {}))
+        self.дата = данные.get('date')
+        self.текст = данные.get('text', '')
+        self.подпись = данные.get('caption', '')
+        self.тип = self._определить_тип(данные)
+        self.фото = данные.get('photo', [])
+        self.видео = данные.get('video', {})
+        self.аудио = данные.get('audio', {})
+        self.документ = данные.get('document', {})
+        self.стикер = данные.get('sticker', {})
+        self.голос = данные.get('voice', {})
+        self.видеозаметка = данные.get('video_note', {})
+        self.локация = данные.get('location', {})
+        self.контакт = данные.get('contact', {})
+        self.опрос = данные.get('poll', {})
+        self.данные = данные
     
     def _определить_тип(self, данные):
         if 'text' in данные:
@@ -196,75 +196,75 @@ class Сообщение:
         return 'неизвестно'
     
     def ответить(self, текст, **kwargs):
-        if сам.бот:
-            return сам.бот.ответить(сам, текст, **kwargs)
+        if self.бот:
+            return self.бот.ответить(self, текст, **kwargs)
     
     def переслать(self, чат_ид):
-        if сам.бот:
-            return сам.бот.переслать(чат_ид, сам.чат.ид, сам.ид)
+        if self.бот:
+            return self.бот.переслать(чат_ид, self.чат.ид, self.ид)
     
     def удалить(self):
-        if сам.бот:
-            return сам.бот.удалить_сообщение(сам.чат.ид, сам.ид)
+        if self.бот:
+            return self.бот.удалить_сообщение(self.чат.ид, self.ид)
     
     def изменить(self, текст, **kwargs):
-        if сам.бот:
-            return сам.бот.изменить_сообщение(сам.чат.ид, сам.ид, текст, **kwargs)
+        if self.бот:
+            return self.бот.изменить_сообщение(self.чат.ид, self.ид, текст, **kwargs)
 
 
 class КолбэкЗапрос:
     def __init__(self, данные, бот=None):
-        сам.бот = бот
-        сам.ид = данные.get('id')
-        сам.от = Пользователь(данные.get('from', {}))
-        сам.сообщение = Сообщение(данные['message'], бот) if 'message' in данные else None
-        сам.данные = данные.get('data', '')
-        сам.чат_экземпляр = данные.get('chat_instance', '')
+        self.бот = бот
+        self.ид = данные.get('id')
+        self.от = Пользователь(данные.get('from', {}))
+        self.сообщение = Сообщение(данные['message'], бот) if 'message' in данные else None
+        self.данные = данные.get('data', '')
+        self.чат_экземпляр = данные.get('chat_instance', '')
     
     def ответить(self, текст=None, предупреждение=False):
-        if сам.бот:
-            return сам.бот.ответить_на_колбэк(сам.ид, текст, предупреждение)
+        if self.бот:
+            return self.бот.ответить_на_колбэк(self.ид, текст, предупреждение)
 
 
 class ИнлайнЗапрос:
     def __init__(self, данные):
-        сам.ид = данные.get('id')
-        сам.от = Пользователь(данные.get('from', {}))
-        сам.запрос = данные.get('query', '')
-        сам.смещение = данные.get('offset', '')
-        сам.тип_чата = данные.get('chat_type', '')
+        self.ид = данные.get('id')
+        self.от = Пользователь(данные.get('from', {}))
+        self.запрос = данные.get('query', '')
+        self.смещение = данные.get('offset', '')
+        self.тип_чата = данные.get('chat_type', '')
 
 
 class ПредварительнаяОплата:
     def __init__(self, данные):
-        сам.ид = данные.get('id')
-        сам.от = Пользователь(данные.get('from', {}))
-        сам.валюта = данные.get('currency', '')
-        сам.сумма = данные.get('total_amount', 0)
-        сам.полезная_нагрузка = данные.get('invoice_payload', '')
+        self.ид = данные.get('id')
+        self.от = Пользователь(данные.get('from', {}))
+        self.валюта = данные.get('currency', '')
+        self.сумма = данные.get('total_amount', 0)
+        self.полезная_нагрузка = данные.get('invoice_payload', '')
 
 
 class РуГрам:
     def __init__(self, токен):
-        сам.токен = токен
-        сам.api = f"https://api.telegram.org/bot{токен}"
-        сам.обработчики = []
-        сам.ошибки = []
-        сам.прослойки = []
-        сам.запущен = False
-        сам.контекст = {}
-        сам.сессии = {}
+        self.токен = токен
+        self.api = f"https://api.telegram.org/bot{токен}"
+        self.обработчики = []
+        self.ошибки = []
+        self.прослойки = []
+        self.запущен = False
+        self.контекст = {}
+        self.сессии = {}
     
     def __setitem__(self, чат_ид, текст):
-        сам.отправить(чат_ид, текст)
+        self.отправить(чат_ид, текст)
     
     def __getitem__(self, чат_ид):
-        return сам.получить_чат(чат_ид)
+        return self.получить_чат(чат_ид)
     
     def обработать(self, команда=None, текст=None, шаблон=None, тип=None, 
                    условие=None, колбэк=None):
         def обёртка(функция):
-            сам.обработчики.append({
+            self.обработчики.append({
                 'команда': команда,
                 'текст': текст,
                 'шаблон': шаблон,
@@ -277,11 +277,11 @@ class РуГрам:
         return обёртка
     
     def ловить_ошибки(self, функция):
-        сам.ошибки.append(функция)
+        self.ошибки.append(функция)
         return функция
     
     def добавить_прослойку(self, функция):
-        сам.прослойки.append(функция)
+        self.прослойки.append(функция)
         return функция
     
     def отправить(self, чат_ид, текст, разметка=None, клавиатура=None, 
@@ -304,51 +304,51 @@ class РуГрам:
         if not разрешить_без_ответа:
             данные['allow_sending_without_reply'] = False
         
-        ответ = requests.post(f"{сам.api}/sendMessage", json=данные).json()
+        ответ = requests.post(f"{self.api}/sendMessage", json=данные).json()
         if not ответ.get('ok'):
             raise ОшибкаОтправки(ответ.get('description', 'Неизвестная ошибка'))
-        return Сообщение(ответ['result'], сам)
+        return Сообщение(ответ['result'], self)
     
     def ответить(self, сообщение, текст, **kwargs):
-        return сам.отправить(сообщение.чат.ид, текст, ответ_на=сообщение.ид, **kwargs)
+        return self.отправить(сообщение.чат.ид, текст, ответ_на=сообщение.ид, **kwargs)
     
     def отправить_фото(self, чат_ид, фото, подпись=None, **kwargs):
         данные = {'chat_id': чат_ид, 'photo': фото}
         if подпись:
             данные['caption'] = подпись
         данные.update(kwargs)
-        ответ = requests.post(f"{сам.api}/sendPhoto", json=данные).json()
+        ответ = requests.post(f"{self.api}/sendPhoto", json=данные).json()
         if not ответ.get('ok'):
             raise ОшибкаОтправки(ответ.get('description', ''))
-        return Сообщение(ответ['result'], сам)
+        return Сообщение(ответ['result'], self)
     
     def отправить_видео(self, чат_ид, видео, подпись=None, **kwargs):
         данные = {'chat_id': чат_ид, 'video': видео}
         if подпись:
             данные['caption'] = подпись
         данные.update(kwargs)
-        ответ = requests.post(f"{сам.api}/sendVideo", json=данные).json()
-        return Сообщение(ответ['result'], сам)
+        ответ = requests.post(f"{self.api}/sendVideo", json=данные).json()
+        return Сообщение(ответ['result'], self)
     
     def отправить_аудио(self, чат_ид, аудио, **kwargs):
         данные = {'chat_id': чат_ид, 'audio': аудио, **kwargs}
-        ответ = requests.post(f"{сам.api}/sendAudio", json=данные).json()
-        return Сообщение(ответ['result'], сам)
+        ответ = requests.post(f"{self.api}/sendAudio", json=данные).json()
+        return Сообщение(ответ['result'], self)
     
     def отправить_документ(self, чат_ид, документ, **kwargs):
         данные = {'chat_id': чат_ид, 'document': документ, **kwargs}
-        ответ = requests.post(f"{сам.api}/sendDocument", json=данные).json()
-        return Сообщение(ответ['result'], сам)
+        ответ = requests.post(f"{self.api}/sendDocument", json=данные).json()
+        return Сообщение(ответ['result'], self)
     
     def отправить_стикер(self, чат_ид, стикер, **kwargs):
         данные = {'chat_id': чат_ид, 'sticker': стикер, **kwargs}
-        ответ = requests.post(f"{сам.api}/sendSticker", json=данные).json()
-        return Сообщение(ответ['result'], сам)
+        ответ = requests.post(f"{self.api}/sendSticker", json=данные).json()
+        return Сообщение(ответ['result'], self)
     
     def отправить_голос(self, чат_ид, голос, **kwargs):
         данные = {'chat_id': чат_ид, 'voice': голос, **kwargs}
-        ответ = requests.post(f"{сам.api}/sendVoice", json=данные).json()
-        return Сообщение(ответ['result'], сам)
+        ответ = requests.post(f"{self.api}/sendVoice", json=данные).json()
+        return Сообщение(ответ['result'], self)
     
     def отправить_опрос(self, чат_ид, вопрос, варианты, анонимный=True, **kwargs):
         данные = {
@@ -358,8 +358,8 @@ class РуГрам:
             'is_anonymous': анонимный,
             **kwargs
         }
-        ответ = requests.post(f"{сам.api}/sendPoll", json=данные).json()
-        return Сообщение(ответ['result'], сам)
+        ответ = requests.post(f"{self.api}/sendPoll", json=данные).json()
+        return Сообщение(ответ['result'], self)
     
     def отправить_локацию(self, чат_ид, широта, долгота, **kwargs):
         данные = {
@@ -368,8 +368,8 @@ class РуГрам:
             'longitude': долгота,
             **kwargs
         }
-        ответ = requests.post(f"{сам.api}/sendLocation", json=данные).json()
-        return Сообщение(ответ['result'], сам)
+        ответ = requests.post(f"{self.api}/sendLocation", json=данные).json()
+        return Сообщение(ответ['result'], self)
     
     def отправить_контакт(self, чат_ид, телефон, имя, **kwargs):
         данные = {
@@ -378,11 +378,11 @@ class РуГрам:
             'first_name': имя,
             **kwargs
         }
-        ответ = requests.post(f"{сам.api}/sendContact", json=данные).json()
-        return Сообщение(ответ['result'], сам)
+        ответ = requests.post(f"{self.api}/sendContact", json=данные).json()
+        return Сообщение(ответ['result'], self)
     
     def отправить_действие(self, чат_ид, действие):
-        return requests.post(f"{сам.api}/sendChatAction", json={
+        return requests.post(f"{self.api}/sendChatAction", json={
             'chat_id': чат_ид,
             'action': действие
         }).json()
@@ -394,8 +394,8 @@ class РуГрам:
             'message_id': сообщение_ид,
             **kwargs
         }
-        ответ = requests.post(f"{сам.api}/forwardMessage", json=данные).json()
-        return Сообщение(ответ['result'], сам)
+        ответ = requests.post(f"{self.api}/forwardMessage", json=данные).json()
+        return Сообщение(ответ['result'], self)
     
     def копировать(self, чат_ид, откуда_чат_ид, сообщение_ид, **kwargs):
         данные = {
@@ -404,7 +404,7 @@ class РуГрам:
             'message_id': сообщение_ид,
             **kwargs
         }
-        ответ = requests.post(f"{сам.api}/copyMessage", json=данные).json()
+        ответ = requests.post(f"{self.api}/copyMessage", json=данные).json()
         return ответ.get('result', {}).get('message_id')
     
     def изменить_сообщение(self, чат_ид, сообщение_ид, текст, разметка=None, клавиатура=None):
@@ -418,13 +418,13 @@ class РуГрам:
         if клавиатура:
             данные['reply_markup'] = клавиатура.в_json() if isinstance(клавиатура, ИнлайнКлавиатура) else клавиатура
         
-        ответ = requests.post(f"{сам.api}/editMessageText", json=данные).json()
+        ответ = requests.post(f"{self.api}/editMessageText", json=данные).json()
         if not ответ.get('ok'):
             raise ОшибкаОтправки(ответ.get('description', ''))
-        return Сообщение(ответ['result'], сам)
+        return Сообщение(ответ['result'], self)
     
     def удалить_сообщение(self, чат_ид, сообщение_ид):
-        return requests.post(f"{сам.api}/deleteMessage", json={
+        return requests.post(f"{self.api}/deleteMessage", json={
             'chat_id': чат_ид,
             'message_id': сообщение_ид
         }).json()
@@ -436,7 +436,7 @@ class РуГрам:
         }
         if текст:
             данные['text'] = текст
-        return requests.post(f"{сам.api}/answerCallbackQuery", json=данные).json()
+        return requests.post(f"{self.api}/answerCallbackQuery", json=данные).json()
     
     def ответить_на_инлайн(self, запрос_ид, результаты, кнопка_переключения=None, 
                            личный_кэш=False, время_кэша=300):
@@ -449,29 +449,29 @@ class РуГрам:
         if кнопка_переключения:
             данные['switch_pm_text'] = кнопка_переключения.get('text', '')
             данные['switch_pm_parameter'] = кнопка_переключения.get('parameter', '')
-        return requests.post(f"{сам.api}/answerInlineQuery", json=данные).json()
+        return requests.post(f"{self.api}/answerInlineQuery", json=данные).json()
     
     def получить_чат(self, чат_ид):
-        ответ = requests.post(f"{сам.api}/getChat", json={'chat_id': чат_ид}).json()
+        ответ = requests.post(f"{self.api}/getChat", json={'chat_id': чат_ид}).json()
         if ответ.get('ok'):
             return Чат(ответ['result'])
         return None
     
     def получить_участника(self, чат_ид, пользователь_ид):
-        ответ = requests.post(f"{сам.api}/getChatMember", json={
+        ответ = requests.post(f"{self.api}/getChatMember", json={
             'chat_id': чат_ид,
             'user_id': пользователь_ид
         }).json()
         return ответ.get('result')
     
     def получить_админов(self, чат_ид):
-        ответ = requests.post(f"{сам.api}/getChatAdministrators", json={
+        ответ = requests.post(f"{self.api}/getChatAdministrators", json={
             'chat_id': чат_ид
         }).json()
         return ответ.get('result', [])
     
     def получить_количество(self, чат_ид):
-        ответ = requests.post(f"{сам.api}/getChatMemberCount", json={
+        ответ = requests.post(f"{self.api}/getChatMemberCount", json={
             'chat_id': чат_ид
         }).json()
         return ответ.get('result', 0)
@@ -483,17 +483,17 @@ class РуГрам:
         }
         if до_даты:
             данные['until_date'] = до_даты
-        return requests.post(f"{сам.api}/kickChatMember", json=данные).json()
+        return requests.post(f"{self.api}/kickChatMember", json=данные).json()
     
     def разбанить(self, чат_ид, пользователь_ид):
-        return requests.post(f"{сам.api}/unbanChatMember", json={
+        return requests.post(f"{self.api}/unbanChatMember", json={
             'chat_id': чат_ид,
             'user_id': пользователь_ид,
             'only_if_banned': True
         }).json()
     
     def ограничить(self, чат_ид, пользователь_ид, права):
-        return requests.post(f"{сам.api}/restrictChatMember", json={
+        return requests.post(f"{self.api}/restrictChatMember", json={
             'chat_id': чат_ид,
             'user_id': пользователь_ид,
             'permissions': права
@@ -505,7 +505,7 @@ class РуГрам:
             'user_id': пользователь_ид,
             **права
         }
-        return requests.post(f"{сам.api}/promoteChatMember", json=данные).json()
+        return requests.post(f"{self.api}/promoteChatMember", json=данные).json()
     
     def пригласительную(self, чат_ид, имя=None, срок=None, лимит=None):
         данные = {'chat_id': чат_ид}
@@ -515,54 +515,54 @@ class РуГрам:
             данные['expire_date'] = срок
         if лимит:
             данные['member_limit'] = лимит
-        ответ = requests.post(f"{сам.api}/createChatInviteLink", json=данные).json()
+        ответ = requests.post(f"{self.api}/createChatInviteLink", json=данные).json()
         return ответ.get('result', {})
     
     def закрепить(self, чат_ид, сообщение_ид, уведомить=True):
-        return requests.post(f"{сам.api}/pinChatMessage", json={
+        return requests.post(f"{self.api}/pinChatMessage", json={
             'chat_id': чат_ид,
             'message_id': сообщение_ид,
             'disable_notification': not уведомить
         }).json()
     
     def открепить(self, чат_ид):
-        return requests.post(f"{сам.api}/unpinChatMessage", json={
+        return requests.post(f"{self.api}/unpinChatMessage", json={
             'chat_id': чат_ид
         }).json()
     
     def установить_фото_чата(self, чат_ид, фото):
-        return requests.post(f"{сам.api}/setChatPhoto", json={
+        return requests.post(f"{self.api}/setChatPhoto", json={
             'chat_id': чат_ид,
             'photo': фото
         }).json()
     
     def удалить_фото_чата(self, чат_ид):
-        return requests.post(f"{сам.api}/deleteChatPhoto", json={
+        return requests.post(f"{self.api}/deleteChatPhoto", json={
             'chat_id': чат_ид
         }).json()
     
     def установить_название(self, чат_ид, название):
-        return requests.post(f"{сам.api}/setChatTitle", json={
+        return requests.post(f"{self.api}/setChatTitle", json={
             'chat_id': чат_ид,
             'title': название
         }).json()
     
     def установить_описание(self, чат_ид, описание):
-        return requests.post(f"{сам.api}/setChatDescription", json={
+        return requests.post(f"{self.api}/setChatDescription", json={
             'chat_id': чат_ид,
             'description': описание
         }).json()
     
     def получить_файл(self, файл_ид):
-        ответ = requests.post(f"{сам.api}/getFile", json={'file_id': файл_ид}).json()
+        ответ = requests.post(f"{self.api}/getFile", json={'file_id': файл_ид}).json()
         if ответ.get('ok'):
             данные = ответ['result']
-            данные['url'] = f"https://api.telegram.org/file/bot{сам.токен}/{данные['file_path']}"
+            данные['url'] = f"https://api.telegram.org/file/bot{self.токен}/{данные['file_path']}"
             return данные
         return None
     
     def скачать_файл(self, файл_ид, путь):
-        файл = сам.получить_файл(файл_ид)
+        файл = self.получить_файл(файл_ид)
         if not файл:
             return False
         ответ = requests.get(файл['url'])
@@ -578,16 +578,16 @@ class РуГрам:
             данные['secret_token'] = секрет
         if разрешённые_обновления:
             данные['allowed_updates'] = разрешённые_обновления
-        return requests.post(f"{сам.api}/setWebhook", json=данные).json()
+        return requests.post(f"{self.api}/setWebhook", json=данные).json()
     
     def удалить_вебхук(self):
-        return requests.post(f"{сам.api}/deleteWebhook").json()
+        return requests.post(f"{self.api}/deleteWebhook").json()
     
     def получить_вебхук(self):
-        return requests.post(f"{сам.api}/getWebhookInfo").json()
+        return requests.post(f"{self.api}/getWebhookInfo").json()
     
     def получить_меня(self):
-        ответ = requests.post(f"{сам.api}/getMe").json()
+        ответ = requests.post(f"{self.api}/getMe").json()
         if ответ.get('ok'):
             return Пользователь(ответ['result'])
         return None
@@ -621,36 +621,36 @@ class РуГрам:
     
     def _прослоить(self, обновление):
         контекст = {}
-        for прослойка in сам.прослойки:
+        for прослойка in self.прослойки:
             результат = прослойка(обновление, контекст)
             if результат is False:
                 return False
         return контекст
     
     def _обработать_обновление(self, обновление):
-        контекст = сам._прослоить(обновление)
+        контекст = self._прослоить(обновление)
         if контекст is False:
             return
         
-        for обработчик in сам.обработчики:
-            if сам._проверить_соответствие(обновление, обработчик):
+        for обработчик in self.обработчики:
+            if self._проверить_соответствие(обновление, обработчик):
                 try:
                     обработчик['функция'](обновление, контекст)
                 except Exception as ошибка:
-                    for ловец in сам.ошибки:
+                    for ловец in self.ошибки:
                         ловец(ошибка, обновление)
     
     def запустить(self, пропускать_старые=True, интервал=0.5):
-        сам.запущен = True
+        self.запущен = True
         смещение = None
         
-        while сам.запущен:
+        while self.запущен:
             try:
                 параметры = {'timeout': 30, 'allowed_updates': ['message', 'callback_query', 'inline_query']}
                 if смещение:
                     параметры['offset'] = смещение
                 
-                ответ = requests.get(f"{сам.api}/getUpdates", params=параметры).json()
+                ответ = requests.get(f"{self.api}/getUpdates", params=параметры).json()
                 
                 if not ответ.get('ok'):
                     continue
@@ -659,30 +659,30 @@ class РуГрам:
                     смещение = обновление['update_id'] + 1
                     
                     if 'message' in обновление:
-                        сообщение = Сообщение(обновление['message'], сам)
-                        сам._обработать_обновление(сообщение)
+                        сообщение = Сообщение(обновление['message'], self)
+                        self._обработать_обновление(сообщение)
                     
                     elif 'callback_query' in обновление:
-                        колбэк = КолбэкЗапрос(обновление['callback_query'], сам)
-                        сам._обработать_обновление(колбэк)
+                        колбэк = КолбэкЗапрос(обновление['callback_query'], self)
+                        self._обработать_обновление(колбэк)
                     
                     elif 'inline_query' in обновление:
                         инлайн = ИнлайнЗапрос(обновление['inline_query'])
-                        сам._обработать_обновление(инлайн)
+                        self._обработать_обновление(инлайн)
                     
                     elif 'pre_checkout_query' in обновление:
                         предоплата = ПредварительнаяОплата(обновление['pre_checkout_query'])
-                        сам._обработать_обновление(предоплата)
+                        self._обработать_обновление(предоплата)
                 
                 time.sleep(интервал)
                 
             except Exception as ошибка:
-                for ловец in сам.ошибки:
+                for ловец in self.ошибки:
                     ловец(ошибка, None)
                 time.sleep(5)
     
     def остановить(self):
-        сам.запущен = False
+        self.запущен = False
     
     def запустить_вебхук(self, приложение, маршрут='/webhook', порт=5000, 
                           хост='0.0.0.0', секрет=None):
@@ -701,11 +701,11 @@ class РуГрам:
             обновление = request.get_json()
             
             if 'message' in обновление:
-                сообщение = Сообщение(обновление['message'], сам)
-                сам._обработать_обновление(сообщение)
+                сообщение = Сообщение(обновление['message'], self)
+                self._обработать_обновление(сообщение)
             elif 'callback_query' in обновление:
-                колбэк = КолбэкЗапрос(обновление['callback_query'], сам)
-                сам._обработать_обновление(колбэк)
+                колбэк = КолбэкЗапрос(обновление['callback_query'], self)
+                self._обработать_обновление(колбэк)
             
             return 'OK', 200
         
@@ -714,41 +714,41 @@ class РуГрам:
 
 class Состояние:
     def __init__(self):
-        сам.пользователи = {}
+        self.пользователи = {}
     
     def установить(self, пользователь_ид, состояние, данные=None):
-        сам.пользователи[пользователь_ид] = {
+        self.пользователи[пользователь_ид] = {
             'состояние': состояние,
             'данные': данные or {},
             'время': time.time()
         }
     
     def получить(self, пользователь_ид):
-        return сам.пользователи.get(пользователь_ид)
+        return self.пользователи.get(пользователь_ид)
     
     def удалить(self, пользователь_ид):
-        if пользователь_ид in сам.пользователи:
-            del сам.пользователи[пользователь_ид]
+        if пользователь_ид in self.пользователи:
+            del self.пользователи[пользователь_ид]
     
     def очистить_старые(self, таймаут=3600):
         сейчас = time.time()
         старые = [
-            ид for ид, данные in сам.пользователи.items()
+            ид for ид, данные in self.пользователи.items()
             if сейчас - данные['время'] > таймаут
         ]
         for ид in старые:
-            del сам.пользователи[ид]
+            del self.пользователи[ид]
 
 
 class ОчередьЗадач:
     def __init__(self, бот):
-        сам.бот = бот
-        сам.задачи = []
-        сам.поток = None
-        сам.работает = False
+        self.бот = бот
+        self.задачи = []
+        self.поток = None
+        self.работает = False
     
     def добавить(self, функция, интервал, повторять=True):
-        сам.задачи.append({
+        self.задачи.append({
             'функция': функция,
             'интервал': интервал,
             'повторять': повторять,
@@ -756,49 +756,49 @@ class ОчередьЗадач:
         })
     
     def запустить(self):
-        сам.работает = True
-        сам.поток = Thread(target=сам._цикл)
-        сам.поток.start()
+        self.работает = True
+        self.поток = Thread(target=self._цикл)
+        self.поток.start()
     
     def остановить(self):
-        сам.работает = False
-        if сам.поток:
-            сам.поток.join()
+        self.работает = False
+        if self.поток:
+            self.поток.join()
     
     def _цикл(self):
-        while сам.работает:
+        while self.работает:
             сейчас = time.time()
-            for задача in сам.задачи[:]:
+            for задача in self.задачи[:]:
                 if сейчас - задача['последний_запуск'] >= задача['интервал']:
                     try:
-                        задача['функция'](сам.бот)
+                        задача['функция'](self.бот)
                     except Exception:
                         pass
                     задача['последний_запуск'] = сейчас
                     if not задача['повторять']:
-                        сам.задачи.remove(задача)
+                        self.задачи.remove(задача)
             time.sleep(0.1)
 
 
 class ПамятьБота:
     def __init__(self):
-        сам.данные = {}
+        self.данные = {}
     
     def сохранить(self, ключ, значение):
-        сам.данные[ключ] = значение
+        self.данные[ключ] = значение
     
     def получить(self, ключ, по_умолчанию=None):
-        return сам.данные.get(ключ, по_умолчанию)
+        return self.данные.get(ключ, по_умолчанию)
     
     def удалить(self, ключ):
-        if ключ in сам.данные:
-            del сам.данные[ключ]
+        if ключ in self.данные:
+            del self.данные[ключ]
     
     def существует(self, ключ):
-        return ключ in сам.данные
+        return ключ in self.данные
     
     def очистить(self):
-        сам.данные.clear()
+        self.данные.clear()
 
 
 class Журнал:
@@ -811,31 +811,31 @@ class Журнал:
     }
     
     def __init__(self, уровень='инфо', файл=None):
-        сам.уровень = сам.УРОВНИ.get(уровень, 20)
-        сам.файл = файл
+        self.уровень = self.УРОВНИ.get(уровень, 20)
+        self.файл = файл
     
     def _писать(self, уровень, сообщение):
-        if сам.УРОВНИ.get(уровень, 0) >= сам.уровень:
+        if self.УРОВНИ.get(уровень, 0) >= self.уровень:
             время = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             текст = f"[{время}] [{уровень.upper()}] {сообщение}"
             
-            if сам.файл:
-                with open(сам.файл, 'a', encoding='utf-8') as ф:
+            if self.файл:
+                with open(self.файл, 'a', encoding='utf-8') as ф:
                     ф.write(текст + '\n')
             else:
                 print(текст)
     
     def отладка(self, сообщение):
-        сам._писать('отладка', сообщение)
+        self._писать('отладка', сообщение)
     
     def инфо(self, сообщение):
-        сам._писать('инфо', сообщение)
+        self._писать('инфо', сообщение)
     
     def предупреждение(self, сообщение):
-        сам._писать('предупреждение', сообщение)
+        self._писать('предупреждение', сообщение)
     
     def ошибка(self, сообщение):
-        сам._писать('ошибка', сообщение)
+        self._писать('ошибка', сообщение)
     
     def критическая(self, сообщение):
-        сам._писать('критическая', сообщение)
+        self._писать('критическая', сообщение)
